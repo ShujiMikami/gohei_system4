@@ -1,0 +1,33 @@
+@startuml
+
+title Class Diagram
+
+class LCDDriver{
+  -SC1602 Information
+  +Initialize()
+  +Clear Display()
+  +Return Home()
+  +Write String()
+  -<<user implement>>writepin_DATA0()
+  -<<user implement>>writepin_DATA1()
+  -<<user implement>>writepin_DATA2()
+  -<<user implement>>writepin_DATA3()
+  -<<user implement>>writepin_DATA4()
+  -<<user implement>>writepin_DATA5()
+  -<<user implement>>writepin_DATA6()
+  -<<user implement>>writepin_DATA7()
+  -<<user implement>>writepin_RS()
+  -<<user implement>>writepin_RW()
+  -<<user implement>>writepin_E()
+  -<<user implement>>wait_ms()
+}
+
+note right
+  user implement属性の関数は, 
+  weakで定義されており, ユーザーが, 
+  どこかのソースファイルで実装する
+end note
+
+class ThermistorCalculator{
+}
+@enduml

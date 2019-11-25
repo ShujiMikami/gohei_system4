@@ -1,0 +1,4 @@
+FW/build/
+*.swp
+*.un~
+*.plantuml~
