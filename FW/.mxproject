@@ -1,7 +1,7 @@
 [PreviousGenFiles]
-HeaderPath=C:/Users/mm07860/workspace/gohei_system4/FW/gohei_system4/Inc
+HeaderPath=C:/Users/mm07860/workspace/gohei_system4/FW/Inc
 HeaderFiles=gpio.h;FreeRTOSConfig.h;lwip.h;lwipopts.h;ethernetif.h;usart.h;stm32f4xx_it.h;stm32f4xx_hal_conf.h;main.h;
-SourcePath=C:/Users/mm07860/workspace/gohei_system4/FW/gohei_system4/Src
+SourcePath=C:/Users/mm07860/workspace/gohei_system4/FW/Src
 SourceFiles=gpio.c;freertos.c;lwip.c;ethernetif.c;syscalls.c;usart.c;stm32f4xx_it.c;stm32f4xx_hal_msp.c;stm32f4xx_hal_timebase_TIM.c;main.c;
 
 [PreviousLibFiles]

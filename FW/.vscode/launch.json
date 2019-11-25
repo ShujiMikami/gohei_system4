@@ -1,0 +1,39 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "cwd": "${workspaceRoot}",
+            "executable": "./build/${workspaceRootFolderName}.elf",
+            "name": "Debug STM32F4Discovery",
+            "request": "launch",
+            "type": "cortex-debug",
+            "servertype": "openocd",
+            "configFiles": [
+                "stlink-v2.cfg",
+                "stm32f4x.cfg"
+            ],
+            "runToMain": true,
+            "preLaunchTask": "build all"
+            
+        },
+        {
+            "cwd": "${workspaceRoot}",
+            "executable": "./build/${workspaceRootFolderName}.elf",
+            "name": "Debug MCU PLF",
+            "request": "launch",
+            "type": "cortex-debug",
+            "servertype": "openocd",
+            "configFiles": [
+                "stlink.cfg",
+                "stm32f4x.cfg"
+            ],
+            "runToMain": true,
+            "preLaunchTask": "build all"
+            
+        }
+
+    ]
+}
