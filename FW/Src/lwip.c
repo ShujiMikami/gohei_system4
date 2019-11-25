@@ -78,7 +78,14 @@ ip4_addr_t netmask;
 ip4_addr_t gw;
 
 /* USER CODE BEGIN 2 */
-
+void SetNetIfStatusCallback(netif_status_callback_fn callback)
+{
+  netif_set_status_callback(&gnetif, callback);
+}
+void SetNetIfLinkCallback(netif_status_callback_fn callback)
+{
+  netif_set_link_callback(&gnetif, callback);
+}
 /* USER CODE END 2 */
 
 /**
