@@ -5,57 +5,22 @@
 #include <cmsis_os.h>
 #include "HTTPAnalyze.h"
 #include "HTTPGenerator.h"
-#include "CageDriver.h"
+// #include "CageDriver.h"
 
 #include "lwip/sockets.h"
 #include "lwip.h"
 
-#define DEBUG
 
-#ifdef DEBUG
-#define DEBUG_PRINT(...) printf(__VA_ARGS__)
-#else
-#define DEBUG_PRINT(...) while(0)
-#endif
-
-
-
-EthernetInterface eth;
-
-TCPSocketServer svr;
-
-TCPSocketConnection client;
-
-DigitalOut led2(LED2); //socket connecting status
-
-//なぜかTickを宣言しないとEthernetがこける
-//Ticker dummyTick;
-
-void requestAction(char* requestMessage);
-
-//EthernetInterfaceSetup
-static void setupEthernetInterface();
-
-//DHCPServerConnection
-static void connectToDHCPServer();
-
-
-//check client connection
-static bool checkClientConnection();
-
-//ForDebug
-static void printRequestLine(HTTPRequest_t request);
-static void printURI(HTTPRequest_t request);
-static void printProtocol(HTTPRequest_t request);
+// void requestAction(char* requestMessage);
 
 //Send Page
-static void sendPage();
+// static void sendPage();
 
 //dhcp wait timeout (x100msec)
 #define DHCP_TIMEOUT 100
 
 //DHCPServerConnection
-static void connectToDHCPServer();
+static bool connectToDHCPServer();
 
 volatile bool isIPSuppliedByDHCP = false;
 volatile struct netif currentNetIf;
@@ -159,36 +124,36 @@ void ServerThreadFunc()
         close(clientfd);
     }
 }
-void requestAction(char* requestMessage)
-{
-    //request line
-    HTTPRequest_t request(requestMessage);
+// void requestAction(char* requestMessage)
+// {
+//     //request line
+//     HTTPRequest_t request(requestMessage);
 
-    printRequestLine(request);
-    printURI(request);
-    printProtocol(request);
+//     printRequestLine(request);
+//     printURI(request);
+//     printProtocol(request);
 
-    char uri[128];
-    request.GetURI(uri, sizeof(uri));
+//     char uri[128];
+//     request.GetURI(uri, sizeof(uri));
 
-    if(strcmp(uri, "/") == 0){
-        DEBUG_PRINT("[Server Thread]Top page access\r\n");
+//     if(strcmp(uri, "/") == 0){
+//         DEBUG_PRINT("[Server Thread]Top page access\r\n");
 
-        sendPage();
-    }else if(strcmp(uri, "/UVToggle") == 0){
-        UVToggleFromEther();
+//         sendPage();
+//     }else if(strcmp(uri, "/UVToggle") == 0){
+//         UVToggleFromEther();
 
-        DEBUG_PRINT("[Server Thread]toggle page access\r\n");
+//         DEBUG_PRINT("[Server Thread]toggle page access\r\n");
 
-        sendPage();
-    }else if(strcmp(uri, "/UVToggle?") == 0){
-        UVToggleFromEther();
+//         sendPage();
+//     }else if(strcmp(uri, "/UVToggle?") == 0){
+//         UVToggleFromEther();
 
-        DEBUG_PRINT("[Server Thread]toggle page access\r\n");
+//         DEBUG_PRINT("[Server Thread]toggle page access\r\n");
 
-        sendPage();
-    }
-}
+//         sendPage();
+//     }
+// }
 
 bool connectToDHCPServer()
 {
@@ -201,35 +166,17 @@ bool connectToDHCPServer()
 
     return (cntLimit < DHCP_TIMEOUT);
 }
-void printRequestLine(HTTPRequest_t request)
-{
-    char requestLine[250];
-    request.GetRequestLine(requestLine, sizeof(requestLine));
-    DEBUG_PRINT("request line = %s\r\n", requestLine);
-}
-void printURI(HTTPRequest_t request)
-{
-    char uri[250];
-    request.GetURI(uri, sizeof(uri));
-    DEBUG_PRINT("uri is = %s\r\n", uri);
-}
-void sendPage()
-{
-    char htmlToSend[1024] = {};
+// void sendPage()
+// {
+//     char htmlToSend[1024] = {};
 
-    CageStatus_t cageStatus = GetCageStatus();
-    CreateTopPage(htmlToSend, sizeof(htmlToSend), cageStatus.temperature, cageStatus.statusMessage, cageStatus.uvStatusMessage);
+//     CageStatus_t cageStatus = GetCageStatus();
+//     CreateTopPage(htmlToSend, sizeof(htmlToSend), cageStatus.temperature, cageStatus.statusMessage, cageStatus.uvStatusMessage);
     
-    DEBUG_PRINT("[Server Thread]send : %s", htmlToSend);
+//     DEBUG_PRINT("[Server Thread]send : %s", htmlToSend);
 
-    client.send(htmlToSend, strlen(htmlToSend));
-}
-void printProtocol(HTTPRequest_t request)
-{
-    char uri[250];
-    request.GetProtocolVersion(uri, sizeof(uri));
-    DEBUG_PRINT("[Server Thread]protocol is %s \r\n", uri);
-}
+//     client.send(htmlToSend, strlen(htmlToSend));
+// }
 bool setupTCPSocket_Blocking(SocketFileDiscriptor_t* socketFd)
 {
     bool status = true;
@@ -265,22 +212,4 @@ bool setupTCPSocket_Blocking(SocketFileDiscriptor_t* socketFd)
     }
 
     return status;
-}
-
-bool checkClientConnection()
-{
-    DEBUG_PRINT("[Server Thread]waiting for client connection...\n\r");
-
-    bool result = false;
-
-    //blocking mode(never timeout)
-    if(svr.accept(client) < 0) {
-        DEBUG_PRINT("[Server Thread]failed to accept connection.\n\r");
-        result = false;
-    } else {
-        DEBUG_PRINT("[Server Thread]connection success!\n\rIP: %s\n\r",client.get_address());
-        result = true;
-    }
-
-    return result;
 }
