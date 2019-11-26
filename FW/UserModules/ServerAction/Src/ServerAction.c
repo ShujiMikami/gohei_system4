@@ -40,8 +40,6 @@ static void setupEthernetInterface();
 //DHCPServerConnection
 static void connectToDHCPServer();
 
-//TCPSocketSetup
-static bool setupTCPSocket();
 
 //check client connection
 static bool checkClientConnection();
@@ -71,6 +69,10 @@ static void netifLinkCallback(struct netif* netIf);
 //Ether down handlertask
 static void networkDownHandlerTask(const void* argument);
 
+//TCPSocketSetup
+typedef int SocketFileDiscriptor_t;
+static bool setupTCPSocket(SocketFileDiscriptor_t* socketFd);
+
 void netifStatusCallback(struct netif* netIf)
 {
   isIPSuppliedByDHCP = true;
@@ -91,19 +93,15 @@ void networkDownHandlerTask(const void* argument)
 }
 void ServerThreadFunc()
 {
+    bool isLANConnected = true;
     if(!isLinkUp){//最初からLinkdownの場合は抜ける
-        return;
+        isLANConnected = false;
     }
     
     //Connect to DHCP server
-    bool dhcpConnectResult = connectToDHCPServer();
-
-    if(!dhcpConnectResult){//dhcp接続失敗時は抜ける
-        return;
+    if(isLANConnected){
+        isLANConnected = connectToDHCPServer();
     }
-
-
-
     
     //setup tcp socket
     bool serverIsListened = setupTCPSocket();
@@ -208,30 +206,41 @@ void printProtocol(HTTPRequest_t request)
     request.GetProtocolVersion(uri, sizeof(uri));
     DEBUG_PRINT("[Server Thread]protocol is %s \r\n", uri);
 }
-bool setupTCPSocket()
+bool setupTCPSocket(SocketFileDiscriptor_t* socketFd)
 {
-    bool result = true;
+    bool status = true;
 
-    //setup tcp socket
-    if(svr.bind(PORT)< 0) {
-        DEBUG_PRINT("[Server Thread]tcp server bind failed.\n\r");
-        result = false;
-    } else {
-        DEBUG_PRINT("[Server Thread]tcp server bind successed.\n\r");
-        result = true;
+    //create socket
+    SocketFileDiscriptor_t sockfd = lwip_socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
+    status = (sockfd >= 0);
+
+    //bind socket
+    if(status){
+        struct sockaddr_in reader_addr;
+        memset(&reader_addr, 0, sizeof(reader_addr));
+        reader_addr.sin_family = AF_INET;
+        reader_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+        reader_addr.sin_port = htons(80);
+
+        int result = bind(sockfd, (struct sockaddr*)&reader_addr, sizeof(reader_addr));
+
+        status = (result >= 0);
     }
 
-    if(result){
-        if(svr.listen(1) < 0) {
-            DEBUG_PRINT("[Server Thread]tcp server listen failed.\n\r");
-            result = false;
-        } else {
-            DEBUG_PRINT("[Server Thread]tcp server listening started...\n\r");
-            result = true;
-        }
+    //listen
+    if(status){
+        int result = listen(sockfd, 5);
+        status = (result >= 0);
     }
 
-    return result;
+    //reuturn sockfd
+    if(status){
+        *socketFd = sockfd;
+    }else{
+        socketFd = -1;
+    }
+
+    return status;
 }
 void setupEthernetInterface()
 {
