@@ -1,33 +1,23 @@
 #include "HTTPAnalyze.h"
 #include <string.h>
 
-#include <mbed.h>
-
-HTTPRequest_t::HTTPRequest_t(char* binaryData)
+void GetRequestLine(char* source, char* buffer, uint16_t bufferSize)
 {
-    int length = strlen(binaryData);
+    char strBuf[1024];
+    strcpy(strBuf, source);
 
-    messageBuffer = new char[length + 1];
-
-    strncpy(messageBuffer, binaryData, length);
-
-    messageBuffer[length] = '\0';
-
-    splitBuffer();
-}
-HTTPRequest_t::~HTTPRequest_t()
-{
-    delete[] messageBuffer;
-}
-void HTTPRequest_t::GetRequestLine(char* buffer, unsigned short bufferSize)
-{
-    if(strlen(requestLine) + 1 <= bufferSize){
-        strcpy(buffer, requestLine);
+    char* requestLine = strtok(strBuf, "\r\n");
+    if(strlen(requestLine) < bufferSize){
+        strncpy(buffer, requestLine, strlen(requestLine));
     }
 }
-HTTPRequest_t::HTTPMethod_t HTTPRequest_t::GetMethod()
+HTTPMethod_t GetMethod(char* source)
 {
     HTTPMethod_t result = NOT_DEFINED;
+
+    char requestLine[1024];
+
+    GetRequestLine(source, requestLine, sizeof(requestLine));
 
     if(strncmp(requestLine, "GET", 3) == 0){
         result = GET;
@@ -39,12 +29,11 @@ HTTPRequest_t::HTTPMethod_t HTTPRequest_t::GetMethod()
 
     return result;
 }
-void HTTPRequest_t::GetURI(char* buffer, unsigned short bufferSize)
+void GetURI(char* source, char* buffer, unsigned short bufferSize)
 {
+    char strToRead[1024];
 
-    char strToRead[64];
-
-    GetRequestLine(strToRead, sizeof(strToRead));
+    GetRequestLine(source, strToRead, sizeof(strToRead));
 
     strtok(strToRead, " ");
 
@@ -54,11 +43,11 @@ void HTTPRequest_t::GetURI(char* buffer, unsigned short bufferSize)
         strcpy(buffer, uri);
     }
 }
-void HTTPRequest_t::GetProtocolVersion(char* buffer, unsigned short bufferSize)
+void GetProtocolVersion(char* source, char* buffer, unsigned short bufferSize)
 {
-    char strToRead[64];
+    char strToRead[1024];
 
-    GetRequestLine(strToRead, sizeof(strToRead));
+    GetRequestLine(source, strToRead, sizeof(strToRead));
 
     strtok(strToRead, " ");
     strtok(NULL, " ");
@@ -70,17 +59,17 @@ void HTTPRequest_t::GetProtocolVersion(char* buffer, unsigned short bufferSize)
     }
 
 }
-void HTTPRequest_t::GetHeader(char* buffer, unsigned short bufferSize)
+void GetHeader(char* source, char* buffer, uint16_t bufferSize)
 {
+    char strBuf[1024];
+
+    strcpy(strBuf, source);
+
+    char* requestLine = strtok(strBuf, "\r\n");
+
+    char* header = strtok(NULL, "\r\n");
+
     if(strlen(header) + 1 <= bufferSize){
         strcpy(buffer, header);
     }
-}
-void HTTPRequest_t::splitBuffer()
-{
-    //request line
-    requestLine = strtok(messageBuffer, "\r\n");
-    
-    //header
-    header = strtok(NULL, "\r\n");
 }

@@ -1,31 +1,18 @@
 #ifndef _HTTPANALYZE_H_
 #define _HTTPANALYZE_H_
 
+#include <stdint.h>
 
-class HTTPRequest_t{
 typedef enum{
     GET,
     POST,
     NOT_DEFINED
 }HTTPMethod_t;
-public:
-private:
-    char* messageBuffer;
-    char* requestLine;
-    char* uri;
-    char* protocolVersion;
-    char* header;
-public:
-    HTTPRequest_t(char* binaryData);
-    ~HTTPRequest_t();
-    void GetRequestLine(char* buffer, unsigned short bufferSize);
-    HTTPMethod_t GetMethod();
-    void GetURI(char* buffer, unsigned short bufferSize);
-    void GetProtocolVersion(char* buffer, unsigned short bufferSize);
-    void GetHeader(char* buffer, unsigned short bufferSize);
-private:
-    void splitBuffer();
-};
 
+void GetRequestLine(char* source, char* buffer, uint16_t bufferSize);
+HTTPMethod_t GetMethod(char* source);
+void GetURI(char* source, char* buffer, uint16_t bufferSize);
+void GetProtocolVersion(char* source, char* buffer, uint16_t bufferSize);
+void GetHeader(char* source, char* buffer, uint16_t bufferSize);
 
 #endif
