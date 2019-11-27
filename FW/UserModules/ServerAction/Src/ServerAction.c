@@ -10,11 +10,14 @@
 #include "lwip/sockets.h"
 #include "lwip.h"
 
+#define HTTP_PORT   80
 
-// void requestAction(char* requestMessage);
+typedef int SocketFileDiscriptor_t;
+
+static void requestAction(char* requestMessage, SocketFileDiscriptor_t clientFd);
 
 //Send Page
-// static void sendPage();
+static void sendPage(SocketFileDiscriptor_t clientFd);
 
 //dhcp wait timeout (x100msec)
 #define DHCP_TIMEOUT 100
@@ -22,9 +25,9 @@
 //DHCPServerConnection
 static bool connectToDHCPServer();
 
-volatile bool isIPSuppliedByDHCP = false;
-volatile struct netif currentNetIf;
-volatile bool isLinkUp = false;
+volatile static bool isIPSuppliedByDHCP = false;
+volatile static struct netif currentNetIf;
+volatile static bool isLinkUp = false;
 
 //Ether callbacks
 static void netifStatusCallback(struct netif* netIf);
@@ -34,11 +37,9 @@ static void netifLinkCallback(struct netif* netIf);
 static void networkDownHandlerTask(const void* argument);
 
 //TCPSocketSetup
-typedef int SocketFileDiscriptor_t;
 static bool setupTCPSocket_Blocking(SocketFileDiscriptor_t* socketFd);
 static void setSocketNonBlocking(SocketFileDiscriptor_t socketFd);
 
-#define HTTP_PORT   80
 
 static int readAllBytesFromClient(SocketFileDiscriptor_t clientFd, char* buffer, int bufferSize);
 
@@ -53,7 +54,10 @@ int readAllBytesFromClient(SocketFileDiscriptor_t clientFd, char* buffer, int bu
         if(readByte > 0){
             buffer[readCnt] = buf;
             readCnt++;
-        }else{
+        }else if(readByte == 0){
+            readCnt = 0;
+            break;
+        }else if(readCnt > 0){
             break;
         }
     }
@@ -85,11 +89,15 @@ void networkDownHandlerTask(const void* argument)
 }
 void ServerThreadFunc()
 {
-    bool isLANConnected = true;
-    if(!isLinkUp){//最初からLinkdownの場合は抜ける
-        isLANConnected = false;
-    }
-    
+    while(!IsMXInitFinished());
+
+    SetNetIfStatusCallback(netifStatusCallback);
+    SetNetIfLinkCallback(netifLinkCallback);
+
+    //Link状態取得
+    isLinkUp = (IsLinkUp() >= 0);
+    bool isLANConnected = isLinkUp;
+
     //Connect to DHCP server
     if(isLANConnected){
         isLANConnected = connectToDHCPServer();
@@ -106,7 +114,7 @@ void ServerThreadFunc()
         //accept client : blocked
         struct sockaddr_in client_addr;
         int client_addr_len;
-        int clientfd = accept(serverSocketFd, (struct sockaddr*)&client_addr, &client_addr_len);
+        int clientfd = lwip_accept(serverSocketFd, (struct sockaddr*)&client_addr, (socklen_t*)&client_addr_len);
 
         //receive client message
         char receiveBuffer[1024] = { 0 };
@@ -118,42 +126,33 @@ void ServerThreadFunc()
             receivedCnt = readAllBytesFromClient(clientfd, receiveBuffer, sizeof(receiveBuffer));
 
             //receivedAction
+            if(receivedCnt > 0){
+                requestAction(receiveBuffer, clientfd);
+            }
         }
 
         //close connection
         close(clientfd);
     }
 }
-// void requestAction(char* requestMessage)
-// {
-//     //request line
-//     HTTPRequest_t request(requestMessage);
+void requestAction(char* requestMessage, SocketFileDiscriptor_t clientFd)
+{
+    if(GetMethod(requestMessage) == GET){
+        char uri[20];
 
-//     printRequestLine(request);
-//     printURI(request);
-//     printProtocol(request);
+        GetURI(requestMessage, uri, sizeof(uri));
 
-//     char uri[128];
-//     request.GetURI(uri, sizeof(uri));
-
-//     if(strcmp(uri, "/") == 0){
-//         DEBUG_PRINT("[Server Thread]Top page access\r\n");
-
-//         sendPage();
-//     }else if(strcmp(uri, "/UVToggle") == 0){
-//         UVToggleFromEther();
-
-//         DEBUG_PRINT("[Server Thread]toggle page access\r\n");
-
-//         sendPage();
-//     }else if(strcmp(uri, "/UVToggle?") == 0){
-//         UVToggleFromEther();
-
-//         DEBUG_PRINT("[Server Thread]toggle page access\r\n");
-
-//         sendPage();
-//     }
-// }
+        if(strcmp(uri, "/") == 0){
+            sendPage(clientFd);
+        }else if(strcmp(uri, "/UVToggle") == 0){
+            // UVToggleFromEther();
+            sendPage(clientFd);
+        }else if(strcmp(uri, "/UVToggle?") == 0){
+            // UVToggleFromEther();
+            sendPage(clientFd);
+        }
+    }
+}
 
 bool connectToDHCPServer()
 {
@@ -166,17 +165,16 @@ bool connectToDHCPServer()
 
     return (cntLimit < DHCP_TIMEOUT);
 }
-// void sendPage()
-// {
-//     char htmlToSend[1024] = {};
+void sendPage(SocketFileDiscriptor_t clientFd)
+{
+    char htmlToSend[1024] = {};
 
-//     CageStatus_t cageStatus = GetCageStatus();
-//     CreateTopPage(htmlToSend, sizeof(htmlToSend), cageStatus.temperature, cageStatus.statusMessage, cageStatus.uvStatusMessage);
-    
-//     DEBUG_PRINT("[Server Thread]send : %s", htmlToSend);
+    // CageStatus_t cageStatus = GetCageStatus();
+    // CreateTopPage(htmlToSend, sizeof(htmlToSend), cageStatus.temperature, cageStatus.statusMessage, cageStatus.uvStatusMessage);
+    CreateTopPage(htmlToSend, sizeof(htmlToSend), 25.0, "heating", "ON");
 
-//     client.send(htmlToSend, strlen(htmlToSend));
-// }
+    lwip_send(clientFd, htmlToSend, strlen(htmlToSend), 0);
+}
 bool setupTCPSocket_Blocking(SocketFileDiscriptor_t* socketFd)
 {
     bool status = true;
@@ -208,7 +206,7 @@ bool setupTCPSocket_Blocking(SocketFileDiscriptor_t* socketFd)
     if(status){
         *socketFd = sockfd;
     }else{
-        socketFd = -1;
+        *socketFd = -1;
     }
 
     return status;

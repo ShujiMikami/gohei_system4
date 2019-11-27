@@ -6,7 +6,7 @@
     "configurations": [
         {
             "cwd": "${workspaceRoot}",
-            "executable": "./build/${workspaceRootFolderName}.elf",
+            "executable": "./build/gohei_system4_FW.elf",
             "name": "Debug STM32F4Discovery",
             "request": "launch",
             "type": "cortex-debug",
@@ -21,7 +21,7 @@
         },
         {
             "cwd": "${workspaceRoot}",
-            "executable": "./build/${workspaceRootFolderName}.elf",
+            "executable": "./build/gohei_system4_FW.elf",
             "name": "Debug MCU PLF",
             "request": "launch",
             "type": "cortex-debug",
