@@ -77,6 +77,8 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
+#define SERVER_TASK_NAME serverActionTask;
+osThreadId serverActionTaskId;
 bool isMXInitFinished = false;
 
 /* USER CODE END Variables */
@@ -120,8 +122,8 @@ void MX_FREERTOS_Init(void) {
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
-  osThreadDef(serverActionTask, ServerThreadFunc, osPriorityNormal, 0, 1024);
-  osThreadCreate(osThread(serverActionTask), NULL);
+  osThreadDef(SERVER_TASK_NAME, ServerThreadFunc, osPriorityNormal, 0, 1024);
+  osThreadCreate(osThread(SERVER_TASK_NAME), NULL);
   /* USER CODE END RTOS_THREADS */
 
   /* USER CODE BEGIN RTOS_QUEUES */
@@ -146,6 +148,7 @@ void StartDefaultTask(void const * argument)
   /* Infinite loop */
   for(;;)
   {
+    
     osDelay(1);
   }
   /* USER CODE END StartDefaultTask */

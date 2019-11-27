@@ -6,11 +6,13 @@
 #include "HTTPAnalyze.h"
 #include "HTTPGenerator.h"
 // #include "CageDriver.h"
-
 #include "lwip/sockets.h"
 #include "lwip.h"
 
 #define HTTP_PORT   80
+
+volatile bool isThreadTerminateRequired = false;
+volatile bool isThreadRebootRequired = false;
 
 typedef int SocketFileDiscriptor_t;
 
@@ -78,7 +80,15 @@ void netifLinkCallback(struct netif* netIf)
 {
     isLinkUp = ((netIf->flags & NETIF_FLAG_LINK_UP) != 0);
     currentNetIf = *netIf;
+
+    if(isLinkUp){//切断状態から接続状態に遷移した場合は, サーバータスクをスタート
+        isThreadRebootRequired = true;
+
+    }else{//接続状態から切断状態に遷移した場合は, サーバータスクを終了
+        isThreadTerminateRequired = true;
+    }
 }
+
 
 
 void networkDownHandlerTask(const void* argument)
