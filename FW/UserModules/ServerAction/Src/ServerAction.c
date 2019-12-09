@@ -45,6 +45,15 @@ static void setSocketNonBlocking(SocketFileDiscriptor_t socketFd);
 
 static int readAllBytesFromClient(SocketFileDiscriptor_t clientFd, char* buffer, int bufferSize);
 
+
+#define SERVER_TASK_NAME serverActionTask;
+
+static osThreadId serverThreadId;
+
+void SetServerThreadID(osThreadId threadID)
+{
+    serverThreadId = threadID;
+}
 int readAllBytesFromClient(SocketFileDiscriptor_t clientFd, char* buffer, int bufferSize)
 {
     int readCnt = 0;
@@ -81,11 +90,16 @@ void netifLinkCallback(struct netif* netIf)
     isLinkUp = ((netIf->flags & NETIF_FLAG_LINK_UP) != 0);
     currentNetIf = *netIf;
 
+    static osThreadId serverTaskHandle;
+
     if(isLinkUp){//切断状態から接続状態に遷移した場合は, サーバータスクをスタート
         isThreadRebootRequired = true;
-
+        osThreadDef(SERVER_TASK_NAME, ServerThreadFunc, osPriorityNormal, 0, 1024);
+        serverThreadId = osThreadCreate(osThread(SERVER_TASK_NAME), NULL);
+        
     }else{//接続状態から切断状態に遷移した場合は, サーバータスクを終了
         isThreadTerminateRequired = true;
+        osThreadTerminate(serverThreadId);
     }
 }
 
@@ -97,13 +111,16 @@ void networkDownHandlerTask(const void* argument)
         osDelay(100);
     }
 }
+static int i = 0;
 void ServerThreadFunc()
 {
     while(!IsMXInitFinished());
 
-    SetNetIfStatusCallback(netifStatusCallback);
-    SetNetIfLinkCallback(netifLinkCallback);
-
+    if(i == 0){
+        SetNetIfStatusCallback(netifStatusCallback);
+        SetNetIfLinkCallback(netifLinkCallback);
+        i++;
+    }
     //Link状態取得
     isLinkUp = (IsLinkUp() >= 0);
     bool isLANConnected = isLinkUp;

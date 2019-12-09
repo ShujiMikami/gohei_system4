@@ -123,7 +123,8 @@ void MX_FREERTOS_Init(void) {
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
   osThreadDef(SERVER_TASK_NAME, ServerThreadFunc, osPriorityNormal, 0, 1024);
-  osThreadCreate(osThread(SERVER_TASK_NAME), NULL);
+  osThreadId serverThreadId = osThreadCreate(osThread(SERVER_TASK_NAME), NULL);
+  SetServerThreadID(serverThreadId);
   /* USER CODE END RTOS_THREADS */
 
   /* USER CODE BEGIN RTOS_QUEUES */
