@@ -152,9 +152,11 @@ UserModules/ThermistorCalculator/Src/ThermistorCalculator.c \
 UserModules/CageDriver/Src/CageDriver.c \
 UserModules/CageDriver/Src/CageDriver_HAL.c \
 UserModules/LCDDriver/Src/SC1602Driver_HAL.c \
+UserModules/BoardControler/Src/BoardControler.c \
 Src/adc.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc.c \
-Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc_ex.c
+Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc_ex.c \
+
 
 # ASM sources
 ASM_SOURCES =  \
@@ -235,7 +237,8 @@ C_INCLUDES =  \
 -IUserModules/ServerAction/Inc \
 -IUserModules/HTTPAnalyze/Inc \
 -IUserModules/ThermistorCalculator/Inc \
--IUserModules/CageDriver/Inc
+-IUserModules/CageDriver/Inc \
+-IUserModules/BoardControler/Inc
 
 
 # compile gcc flags
