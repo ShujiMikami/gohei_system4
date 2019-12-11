@@ -1,11 +1,13 @@
 // #include "mbed.h"
 #include "SC1602Driver.h"
 #include "ThermistorCalculator.h"
-#include "stdlib.h"
-#include "stdio.h"
+#include <stdlib.h>
+#include <stdio.h>
 #include "CageDriver.h"
 #include "cmsis_os.h"
 #include "CageDriver_HAL.h"
+#include <stdbool.h>
+
 
 //SettingSwitchの切り替え先定義
 #define SETTING_SWITCH_SETTING (DigitalPinState_t)DIGITAL_PIN_HIGH
@@ -40,10 +42,9 @@ typedef enum{
 
 //サーミスタ周り
 double calculateThermistorResistance(double adcRatio);
-const double R_ROOM = 10000.0;
-const double B_CONST = 3380.0;
-const double R_SERIES = 10000.0;
-ThermistorCalculator thermoCalculator(B_CONST, R_ROOM);
+#define R_ROOM (double)10000.0
+#define B_CONST (double)3380.0
+#define R_SERIES (double)10000.0
 double measureTemperature();
 
 //operatingAction
@@ -53,13 +54,11 @@ double targetTemperatureUpperLimit = 35;
 double dangerZone = 40.0;
 double deadZone = 1.0;
 void operatingAction();
-// Timer timer;
-// float operatingPeriod = 1;//3秒周期制御
+#define OPERATING_PERIOD (int)3000 //3秒周期制御
 
 //settingAction
 void settingAction();
-Timer timer4Setting;
-float buttonDisableTime = 300;//300msecはボタン無効時間
+#define BUTTON_DISABLE_TIME (int)300//300msecはボタン無効時間
 void indicateSetTemperature();
 
 //action
@@ -102,9 +101,9 @@ double calculateThermistorResistance(double adcRatio)
 }
 double measureTemperature()
 {
-    double thermistorResistance = calculateThermistorResistance(thermistorPin.read());
+    double thermistorResistance = calculateThermistorResistance(readThermistorPinAnalogRatio());
 
-    return thermoCalculator.CalculateTemperature(thermistorResistance);
+    return CalculateTemperature(thermistorResistance, B_CONST, R_ROOM);
 }
 void operatingAction()
 {
@@ -156,24 +155,22 @@ void settingAction()
     if(buttonEnabled){
         if(readPushButton_SettingUp() == SETTING_SWITCH_PUSHED){
             buttonEnabled = false;
-            timer4Setting.start();
+            resetTimer4Setting();
             if(targetTemperature < targetTemperatureUpperLimit){
                 targetTemperature++;
             }
             indicateSetTemperature();
         }else if(readPushButton_SettingDown() == SETTING_SWITCH_PUSHED){
             buttonEnabled = false;
-            timer4Setting.start();
+            resetTimer4Setting();
             if(targetTemperature > targetTemperatureLowerLimit){
                 targetTemperature--;
             }
             indicateSetTemperature();
         }
     }else{
-        if(timer4Setting.read_ms() > buttonDisableTime){
+        if(readTime4Setting_ms() > BUTTON_DISABLE_TIME){
             buttonEnabled = true;
-            timer4Setting.stop();
-            timer4Setting.reset();
         }
     }
 }
@@ -202,27 +199,23 @@ void systemAction(SystemStatus_t systemStatus)
         outOfSettingModeFlag = true;
 
         if(!isTimerStatrted){
-            timer.start();
+            resetTimer4Period();
             isTimerStatrted = true;
         }
 
-        if(timer.read() > operatingPeriod){
+        if(readTime4Period_ms() > OPERATING_PERIOD){
             operatingAction();
-            timer.reset();
         }
     }else{
         //SettingModeに入ると, Ether制御を無効にする
         isRemoteControlEnabled = false;
 
-        timer.stop();
-        timer.reset();
         isTimerStatrted = false;
 
         //セッティングモードに入った初回の表示
         if(outOfSettingModeFlag){
             indicateSetTemperature();
             outOfSettingModeFlag = false;
-            DEBUG_PRINT("[CageDrive Thread]Setting Mode\r\n");
         }
 
         settingAction();

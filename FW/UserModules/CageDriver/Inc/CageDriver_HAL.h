@@ -1,12 +1,12 @@
 #ifndef CAGEDRIVER_HAL_H_
 #define CAGEDRIVER_HAL_H_
 
-//To be defined by user
 typedef enum{
     DIGITAL_PIN_HIGH,
     DIGITAL_PIN_LOW
 }DigitalPinState_t;
 
+//To be defined by user
 DigitalPinState_t readSettingEntrySwitch();
 DigitalPinState_t readUVControlSwitch();
 DigitalPinState_t readPushButton_SettingUp();
@@ -20,4 +20,11 @@ DigitalPinState_t readUVControl();
 DigitalPinState_t readHeaterControl();
 DigitalPinState_t readFanControl();
 
+double readThermistorPinAnalogRatio();
+
+void resetTimer4Setting();
+int readTime4Setting_ms();
+
+void resetTimer4Period();
+int readTime4Period_ms();
 #endif
