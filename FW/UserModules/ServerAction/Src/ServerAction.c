@@ -117,16 +117,13 @@ void networkDownHandlerTask(const void* argument)
         osDelay(100);
     }
 }
-static int i = 0;
 void ServerThreadFunc()
 {
     while(!IsMXInitFinished());
 
-    if(i == 0){
-        SetNetIfStatusCallback(netifStatusCallback);
-        SetNetIfLinkCallback(netifLinkCallback);
-        i++;
-    }
+    SetNetIfStatusCallback(netifStatusCallback);
+    SetNetIfLinkCallback(netifLinkCallback);
+
     //Link状態取得
     isLinkUp = (IsLinkUp() >= 0);
     bool isLANConnected = isLinkUp;
