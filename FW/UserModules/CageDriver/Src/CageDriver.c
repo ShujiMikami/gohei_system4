@@ -136,14 +136,14 @@ void operatingAction()
 
     //ファン, ヒータ制御
     if(operatingStatus == FAN_COOLING){
-        heaterControl = CONTROL_STATUS_OFF;
-        fanControl = CONTROL_STATUS_ON;
+        writeHeaterControl(CONTROL_STATUS_OFF);
+        writeFanControl(CONTROL_STATUS_ON);
     }else if(operatingStatus == NATURAL_COOLING){
-        heaterControl = CONTROL_STATUS_OFF;
-        fanControl = CONTROL_STATUS_OFF;
+        writeHeaterControl(CONTROL_STATUS_OFF);
+        writeFanControl(CONTROL_STATUS_OFF);
     }else{
-        heaterControl = CONTROL_STATUS_ON;
-        fanControl = CONTROL_STATUS_OFF;
+        writeHeaterControl(CONTROL_STATUS_ON);
+        writeFanControl(CONTROL_STATUS_OFF);
     }
 
     //LCDに反映
@@ -209,7 +209,6 @@ void systemAction(SystemStatus_t systemStatus)
         if(timer.read() > operatingPeriod){
             operatingAction();
             timer.reset();
-            DEBUG_PRINT("[CageDrive Thread]Operating Period\r\n");
         }
     }else{
         //SettingModeに入ると, Ether制御を無効にする

@@ -13,6 +13,8 @@ DigitalPinState_t readPushButton_SettingUp();
 DigitalPinState_t readPushButton_SettingDown();
 
 void writeUVControl(DigitalPinState_t state);
+void writeHeaterControl(DigitalPinState_t state);
+void writeFanControl(DigitalPinState_t state);
 
 
 #endif
