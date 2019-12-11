@@ -78,7 +78,25 @@ ip4_addr_t netmask;
 ip4_addr_t gw;
 
 /* USER CODE BEGIN 2 */
+void SetNetIfStatusCallback(netif_status_callback_fn callback)
+{
+  netif_set_status_callback(&gnetif, callback);
+}
+void SetNetIfLinkCallback(netif_status_callback_fn callback)
+{
+  netif_set_link_callback(&gnetif, callback);
+}
+int IsLinkUp()
+{
+  int result = 0;
+  if(gnetif.flags & NETIF_FLAG_LINK_UP){
+    result = 0;
+  }else{
+    result = -1;
+  }
 
+  return result;
+}
 /* USER CODE END 2 */
 
 /**

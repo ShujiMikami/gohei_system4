@@ -55,19 +55,23 @@
 #include "stm32f4xx_hal.h"
 
 /* USER CODE BEGIN Includes */
-
+#include <stdbool.h>
 /* USER CODE END Includes */
 
 /* Private define ------------------------------------------------------------*/
 
+#define SETTING_BUTTON_UP_Pin GPIO_PIN_2
+#define SETTING_BUTTON_UP_GPIO_Port GPIOE
+#define SETTING_BUTTON_DOWN_Pin GPIO_PIN_3
+#define SETTING_BUTTON_DOWN_GPIO_Port GPIOE
 #define LCD_DATA6_Pin GPIO_PIN_5
 #define LCD_DATA6_GPIO_Port GPIOE
 #define LCD_DATA7_Pin GPIO_PIN_6
 #define LCD_DATA7_GPIO_Port GPIOE
-#define LCD_RS_Pin GPIO_PIN_13
-#define LCD_RS_GPIO_Port GPIOC
 #define LCD_DATA1_Pin GPIO_PIN_0
 #define LCD_DATA1_GPIO_Port GPIOC
+#define THERMISTOR_ADC_PIN_Pin GPIO_PIN_0
+#define THERMISTOR_ADC_PIN_GPIO_Port GPIOA
 #define LCD_DATA0_Pin GPIO_PIN_6
 #define LCD_DATA0_GPIO_Port GPIOA
 #define LCD_RW_Pin GPIO_PIN_7
@@ -82,6 +86,16 @@
 #define LCD_DATA3_GPIO_Port GPIOE
 #define LCD_DATA2_Pin GPIO_PIN_12
 #define LCD_DATA2_GPIO_Port GPIOE
+#define SETTING_ENTRY_SW_Pin GPIO_PIN_13
+#define SETTING_ENTRY_SW_GPIO_Port GPIOE
+#define UV_CONTROL_Pin GPIO_PIN_8
+#define UV_CONTROL_GPIO_Port GPIOB
+#define HEATER_CONTROL_Pin GPIO_PIN_9
+#define HEATER_CONTROL_GPIO_Port GPIOB
+#define FAN_CONTROL_Pin GPIO_PIN_0
+#define FAN_CONTROL_GPIO_Port GPIOE
+#define UVSETTING_SW_Pin GPIO_PIN_1
+#define UVSETTING_SW_GPIO_Port GPIOE
 
 /* ########################## Assert Selection ############################## */
 /**
@@ -91,7 +105,7 @@
  #define USE_FULL_ASSERT    1U 
 
 /* USER CODE BEGIN Private defines */
-
+bool IsMXInitFinished();
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus
