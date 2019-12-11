@@ -12,5 +12,7 @@ DigitalPinState_t readUVControlSwitch();
 DigitalPinState_t readPushButton_SettingUp();
 DigitalPinState_t readPushButton_SettingDown();
 
+void writeUVControl(DigitalPinState_t state);
+
 
 #endif

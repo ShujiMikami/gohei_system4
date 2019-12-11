@@ -181,16 +181,16 @@ void systemAction(SystemStatus_t systemStatus)
 {
     //UVスイッチ監視, 制御
     if(!isRemoteControlEnabled){//リモート制御無効時
-        if(uvControlSwitch == UV_SWITCH_ON){
-            uvControl = CONTROL_STATUS_ON;
+        if(readUVControlSwitch() == UV_SWITCH_ON){
+            writeUVControl(CONTROL_STATUS_ON);
         }else{
-            uvControl = CONTROL_STATUS_OFF;
+            writeUVControl(CONTROL_STATUS_OFF);
         }
     }else{//リモート制御が有効時
         if(uvControlFlag_Ether == UV_SWITCH_ON){
-            uvControl = CONTROL_STATUS_ON;
+            writeUVControl(CONTROL_STATUS_ON);
         }else{
-            uvControl = CONTROL_STATUS_OFF;
+            writeUVControl(CONTROL_STATUS_OFF);
         }
     }
 
