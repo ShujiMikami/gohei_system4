@@ -145,7 +145,8 @@ Middlewares/Third_Party/LwIP/src/core/ipv6/nd6.c \
 Middlewares/Third_Party/LwIP/system/OS/sys_arch.c \
 Middlewares/Third_Party/LwIP/src/apps/mqtt/mqtt.c \
 UserModules/LCDDriver/Src/SC1602Driver.c \
-UserModules/ThermistorCalculator/Src/ThermistorCalculator.c
+UserModules/ThermistorCalculator/Src/ThermistorCalculator.c \
+UserModules/CageDriver/Src/CageDriver.c
 
 # ASM sources
 ASM_SOURCES =  \
@@ -223,7 +224,8 @@ C_INCLUDES =  \
 -IMiddlewares/Third_Party/LwIP/system/arch \
 -IDrivers/CMSIS/Include \
 -IUserModules/LCDDriver/Inc \
--IUserModules/ThermistorCalculator/Inc
+-IUserModules/ThermistorCalculator/Inc \
+-IUserModules/CageDriver/Inc
 
 
 # compile gcc flags
