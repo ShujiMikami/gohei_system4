@@ -150,7 +150,8 @@ UserModules/ServerAction/Src/HTTPGenerator.c \
 UserModules/HTTPAnalyze/Src/HTTPAnalyze.c \
 UserModules/ThermistorCalculator/Src/ThermistorCalculator.c \
 UserModules/CageDriver/Src/CageDriver.c \
-UserModules/CageDriver/Src/CageDriver_HAL.c
+UserModules/CageDriver/Src/CageDriver_HAL.c \
+UserModules/LCDDriver/Src/SC1602Driver_HAL.c
 
 # ASM sources
 ASM_SOURCES =  \

@@ -1,5 +1,5 @@
 #include "SC1602Driver.h"
-#include "SC1602Typedef.h"
+#include "SC1602Driver_HAL.h"
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
@@ -157,52 +157,4 @@ void writepin_DataBus(uint8_t data)
     writepin_DATA5(statesToWrite[5]);
     writepin_DATA6(statesToWrite[6]);
     writepin_DATA7(statesToWrite[7]);
-}
-__attribute__ ((weak)) void writepin_DATA0(SC1602_PinState_t status)
-{
-    assert(1);
-}
-__attribute__ ((weak)) void writepin_DATA1(SC1602_PinState_t status)
-{
-    assert(1);
-}
-__attribute__ ((weak)) void writepin_DATA2(SC1602_PinState_t status)
-{
-    assert(1);
-}
-__attribute__ ((weak)) void writepin_DATA3(SC1602_PinState_t status)
-{
-    assert(1);
-}
-__attribute__ ((weak)) void writepin_DATA4(SC1602_PinState_t status)
-{
-    assert(1);
-}
-__attribute__ ((weak)) void writepin_DATA5(SC1602_PinState_t status)
-{
-    assert(1);
-}
-__attribute__ ((weak)) void writepin_DATA6(SC1602_PinState_t status)
-{
-    assert(1);
-}
-__attribute__ ((weak)) void writepin_DATA7(SC1602_PinState_t status)
-{
-    assert(1);
-}
-__attribute__ ((weak)) void writepin_RS(SC1602_PinState_t status)
-{
-    assert(1);
-}
-__attribute__ ((weak)) void writepin_RW(SC1602_PinState_t status)
-{
-    assert(1);
-}
-__attribute__ ((weak)) void writepin_E(SC1602_PinState_t status)
-{
-    assert(1);
-}
-__attribute__ ((weak)) void wait_ms(int milisecond)
-{
-    assert(1);
 }
