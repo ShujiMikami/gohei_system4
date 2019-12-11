@@ -147,7 +147,10 @@ Middlewares/Third_Party/LwIP/src/apps/mqtt/mqtt.c \
 UserModules/LCDDriver/Src/SC1602Driver.c \
 UserModules/ServerAction/Src/ServerAction.c \
 UserModules/ServerAction/Src/HTTPGenerator.c \
-UserModules/HTTPAnalyze/Src/HTTPAnalyze.c
+UserModules/HTTPAnalyze/Src/HTTPAnalyze.c \
+UserModules/ThermistorCalculator/Src/ThermistorCalculator.c \
+UserModules/CageDriver/Src/CageDriver.c \
+UserModules/CageDriver/Src/CageDriver_HAL.c
 
 # ASM sources
 ASM_SOURCES =  \
@@ -226,8 +229,9 @@ C_INCLUDES =  \
 -IDrivers/CMSIS/Include \
 -IUserModules/LCDDriver/Inc \
 -IUserModules/ServerAction/Inc \
--IUserModules/HTTPAnalyze/Inc
-
+-IUserModules/HTTPAnalyze/Inc \
+-IUserModules/ThermistorCalculator/Inc \
+-IUserModules/CageDriver/Inc
 
 
 # compile gcc flags
