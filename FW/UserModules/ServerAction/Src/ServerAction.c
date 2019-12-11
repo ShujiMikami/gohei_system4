@@ -5,7 +5,7 @@
 #include <cmsis_os.h>
 #include "HTTPAnalyze.h"
 #include "HTTPGenerator.h"
-// #include "CageDriver.h"
+#include "CageDriver.h"
 #include "lwip/sockets.h"
 #include "lwip.h"
 
@@ -198,9 +198,8 @@ void sendPage(SocketFileDiscriptor_t clientFd)
 {
     char htmlToSend[1024] = {};
 
-    // CageStatus_t cageStatus = GetCageStatus();
-    // CreateTopPage(htmlToSend, sizeof(htmlToSend), cageStatus.temperature, cageStatus.statusMessage, cageStatus.uvStatusMessage);
-    CreateTopPage(htmlToSend, sizeof(htmlToSend), 25.0, "heating", "ON");
+    CageStatus_t cageStatus = GetCageStatus();
+    CreateTopPage(htmlToSend, sizeof(htmlToSend), cageStatus.temperature, cageStatus.statusMessage, cageStatus.uvStatusMessage);
 
     lwip_send(clientFd, htmlToSend, strlen(htmlToSend), 0);
 }
