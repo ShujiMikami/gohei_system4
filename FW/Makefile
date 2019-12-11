@@ -146,7 +146,8 @@ Middlewares/Third_Party/LwIP/system/OS/sys_arch.c \
 Middlewares/Third_Party/LwIP/src/apps/mqtt/mqtt.c \
 UserModules/LCDDriver/Src/SC1602Driver.c \
 UserModules/ThermistorCalculator/Src/ThermistorCalculator.c \
-UserModules/CageDriver/Src/CageDriver.c
+UserModules/CageDriver/Src/CageDriver.c \
+UserModules/CageDriver/Src/CageDriver_HAL.c
 
 # ASM sources
 ASM_SOURCES =  \

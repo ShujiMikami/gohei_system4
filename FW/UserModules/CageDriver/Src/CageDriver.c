@@ -5,13 +5,22 @@
 #include "stdio.h"
 #include "CageDriver.h"
 #include "cmsis_os.h"
+#include "CageDriver_HAL.h"
 
-// #ifdef DEBUG
-// #define DEBUG_PRINT(...) printf(__VA_ARGS__)
-// #else
-// #define DEBUG_PRINT(...) while(0)
-// #endif
+//SettingSwitchの切り替え先定義
+#define SETTING_SWITCH_SETTING (DigitalPinState_t)DIGITAL_PIN_HIGH
+#define SETTING_SWITCH_OPERATING (DigitalPinState_t)DIGITAL_PIN_LOW
 
+//Settingのタクトボタンの負論理定義
+#define SETTING_SWITCH_PUSHED (DigitalPinState_t)DIGITAL_PIN_LOW
+
+//UVスイッチの正論理定義
+#define UV_SWITCH_ON (DigitalPinState_t)DIGITAL_PIN_HIGH
+#define UV_SWITCH_OFF (DigitalPinState_t)DIGITAL_PIN_LOW
+
+//制御のONOFF正論理定義
+#define CONTROL_STATUS_ON (DigitalPinState_t)DIGITAL_PIN_HIGH
+#define CONTROL_STATUS_OFF (DigitalPinState_t)DIGITAL_PIN_LOW
 
 //バージョン番号
 const char versionNumber[] = "Ver 0.0.2";
@@ -28,46 +37,6 @@ typedef enum{
     NATURAL_COOLING,
     HEATING
 }OperatingStatus_t;
-
-//GPIOのHL名前つけ
-// const int PIN_STATUS_HIGH = 1;
-// const int PIN_STATUS_LOW = 0;
-
-//LCD周り
-// BusOut lcdDataBus(p5, p6, p7, p8, p9, p10, p11, p12);
-// DigitalOut pin_RS(p13);
-// DigitalOut pin_RW(p14);
-// DigitalOut pin_E(p15);
-// SC1602Driver LCD(lcdDataBus, pin_RS, pin_RW, pin_E);
-
-//ADC周り
-// AnalogIn thermistorPin(p20);
-
-//スイッチ周り
-// DigitalIn settingEntrySwitch(p17);
-// DigitalIn settingUpSwitch(p19);
-// DigitalIn settingDownSwitch(p18);
-// DigitalIn uvControlSwitch(p16);
-
-//制御線周り
-// DigitalOut heaterControl(p22);
-// DigitalOut uvControl(p23);
-// DigitalOut fanControl(p21);
-
-//SettingSwitchの切り替え先定義
-// const int SETTING_SWITCH_SETTING = PIN_STATUS_HIGH;
-// const int SETTING_SWITCH_OPERATING = PIN_STATUS_LOW;
-
-//Settingのタクトボタンの負論理定義
-// const int SETTING_SWITCH_PUSHED = PIN_STATUS_LOW;
-
-//UVスイッチの正論理定義
-// const int UV_SWITCH_ON = PIN_STATUS_HIGH;
-// const int UV_SWITCH_OFF = PIN_STATUS_LOW;
-
-//制御のONOFF正論理定義
-// const int CONTROL_STATUS_ON = 1;
-// const int CONTROL_STATUS_OFF = 0;
 
 //サーミスタ周り
 double calculateThermistorResistance(double adcRatio);
@@ -106,8 +75,6 @@ void indicateInitialMessage();
 //状態判定系
 SystemStatus_t getRequiredSystemStatus();
 
-//ピンセッティング初期化
-void initializePinSetting();
 
 //外部から覗ける変数
 static double currentTemperature = 0;
@@ -117,11 +84,7 @@ static bool isRemoteControlEnabled = false;
 
 void CageDriveThread() {
     //起動メッセージ表示
-    // DEBUG_PRINT("[CageDrive Thread]Initial Message\r\n");
     indicateInitialMessage();
-
-    //入力ピンinitialize
-    initializePinSetting();
 
     SystemStatus_t operatingStatus = SYSTEM_OPERATING;
 
@@ -292,17 +255,11 @@ void indicateInitialMessage()
     WriteString_SC1602((char*)versionNumber, 2);
     osDelay(3000);
 }
-void initializePinSetting()
-{
-    settingEntrySwitch.mode(PullUp);
-    settingUpSwitch.mode(PullUp);
-    settingDownSwitch.mode(PullUp);
-    uvControlSwitch.mode(PullUp);
-}
 SystemStatus_t getRequiredSystemStatus()
 {
     SystemStatus_t result = SYSTEM_OPERATING;
-    if(settingEntrySwitch == SETTING_SWITCH_SETTING){
+
+    if(readSettingEntrySwitch() == SETTING_SWITCH_SETTING){
         result = SYSTEM_SETTING;
     }else{
         result = SYSTEM_OPERATING;
