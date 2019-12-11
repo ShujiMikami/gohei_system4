@@ -144,7 +144,10 @@ Middlewares/Third_Party/LwIP/src/core/ipv6/mld6.c \
 Middlewares/Third_Party/LwIP/src/core/ipv6/nd6.c \
 Middlewares/Third_Party/LwIP/system/OS/sys_arch.c \
 Middlewares/Third_Party/LwIP/src/apps/mqtt/mqtt.c \
-UserModules/LCDDriver/Src/SC1602Driver.c
+UserModules/LCDDriver/Src/SC1602Driver.c \
+UserModules/ServerAction/Src/ServerAction.c \
+UserModules/ServerAction/Src/HTTPGenerator.c \
+UserModules/HTTPAnalyze/Src/HTTPAnalyze.c
 
 # ASM sources
 ASM_SOURCES =  \
@@ -221,7 +224,10 @@ C_INCLUDES =  \
 -IMiddlewares/Third_Party/LwIP/src/include/posix/sys \
 -IMiddlewares/Third_Party/LwIP/system/arch \
 -IDrivers/CMSIS/Include \
--IUserModules/LCDDriver/Inc
+-IUserModules/LCDDriver/Inc \
+-IUserModules/ServerAction/Inc \
+-IUserModules/HTTPAnalyze/Inc
+
 
 
 # compile gcc flags
