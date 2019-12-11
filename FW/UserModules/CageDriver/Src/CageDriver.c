@@ -273,7 +273,7 @@ CageStatus_t GetCageStatus()
     result.temperature = currentTemperature;
     sprintf(result.statusMessage, "%s", operatingStatusMessage);
 
-    if(uvControl == UV_SWITCH_ON){
+    if(readUVControl() == UV_SWITCH_ON){
         strcpy(result.uvStatusMessage, "ON");
     }else{
         strcpy(result.uvStatusMessage, "OFF");
@@ -286,13 +286,13 @@ void UVOnFromEther()
     isRemoteControlEnabled = true;
     uvControlFlag_Ether = UV_SWITCH_ON;
 
-    while(uvControl != uvControlFlag_Ether);
+    while(readUVControl() != uvControlFlag_Ether);
 }
 void UVOffFromEther(){
     isRemoteControlEnabled = true;
     uvControlFlag_Ether = UV_SWITCH_OFF;
     
-    while(uvControl != uvControlFlag_Ether);
+    while(readUVControl != uvControlFlag_Ether);
 }
 void UVToggleFromEther()
 {

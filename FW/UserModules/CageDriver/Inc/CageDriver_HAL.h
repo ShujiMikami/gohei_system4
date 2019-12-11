@@ -16,5 +16,8 @@ void writeUVControl(DigitalPinState_t state);
 void writeHeaterControl(DigitalPinState_t state);
 void writeFanControl(DigitalPinState_t state);
 
+DigitalPinState_t readUVControl();
+DigitalPinState_t readHeaterControl();
+DigitalPinState_t readFanControl();
 
 #endif
