@@ -154,14 +154,14 @@ void settingAction()
     static bool buttonEnabled = true;
 
     if(buttonEnabled){
-        if(settingUpSwitch == SETTING_SWITCH_PUSHED){
+        if(readPushButton_SettingUp() == SETTING_SWITCH_PUSHED){
             buttonEnabled = false;
             timer4Setting.start();
             if(targetTemperature < targetTemperatureUpperLimit){
                 targetTemperature++;
             }
             indicateSetTemperature();
-        }else if(settingDownSwitch == SETTING_SWITCH_PUSHED){
+        }else if(readPushButton_SettingDown() == SETTING_SWITCH_PUSHED){
             buttonEnabled = false;
             timer4Setting.start();
             if(targetTemperature > targetTemperatureLowerLimit){
@@ -234,18 +234,18 @@ void indicateSetTemperature()
 
     sprintf(buffer, "%2.1f%c%c", targetTemperature, (char)0xDF, 'C');
 
-    LCD.ClearDisplay();
+    ClearDisplay_SC1602();
 
-    LCD.WriteString(buffer, 1);
+    WriteString_SC1602(buffer, 1);
 }
 void indicateCurrentStatus(double currentTemperature, char* controlStatus)
 {
-    LCD.ClearDisplay();
+    ClearDisplay_SC1602();
     char line1Buf[16];
     sprintf(line1Buf, "%2.1f%c%c", currentTemperature, (char)0xDF, 'C');
 
-    LCD.WriteString(line1Buf, 1);
-    LCD.WriteString(controlStatus, 2);
+    WriteString_SC1602(line1Buf, 1);
+    WriteString_SC1602(controlStatus, 2);
 }
 void indicateInitialMessage()
 {
