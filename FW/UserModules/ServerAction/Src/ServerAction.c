@@ -50,6 +50,8 @@ static int readAllBytesFromClient(SocketFileDiscriptor_t clientFd, char* buffer,
 
 static osThreadId serverThreadId;
 
+static SocketFileDiscriptor_t serverSocketFd = -1;
+
 void SetServerThreadID(osThreadId threadID)
 {
     serverThreadId = threadID;
@@ -99,7 +101,11 @@ void netifLinkCallback(struct netif* netIf)
         
     }else{//接続状態から切断状態に遷移した場合は, サーバータスクを終了
         isThreadTerminateRequired = true;
+
+        lwip_close(serverSocketFd);
+
         osThreadTerminate(serverThreadId);
+
     }
 }
 
@@ -131,7 +137,6 @@ void ServerThreadFunc()
     }
     
     //setup tcp socket
-    SocketFileDiscriptor_t serverSocketFd = -1;
     if(isLANConnected){
         isLANConnected = setupTCPSocket_Blocking(&serverSocketFd);
     }
