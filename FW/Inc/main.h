@@ -68,6 +68,8 @@
 #define LCD_DATA6_GPIO_Port GPIOE
 #define LCD_DATA7_Pin GPIO_PIN_6
 #define LCD_DATA7_GPIO_Port GPIOE
+#define LCD_RS_Pin GPIO_PIN_13
+#define LCD_RS_GPIO_Port GPIOC
 #define LCD_DATA1_Pin GPIO_PIN_0
 #define LCD_DATA1_GPIO_Port GPIOC
 #define THERMISTOR_ADC_PIN_Pin GPIO_PIN_0

@@ -1,4 +1,0 @@
-#ifndef BOARDCONTROLER_H_
-#define BOARDCONTROLER_H_
-
-#endif
