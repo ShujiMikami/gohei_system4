@@ -60,18 +60,24 @@ double readThermistorPinAnalogRatio()
     return (double)adcVal / (double)0xFFF;
 }
 
+static int timer4SettingCount = 0;
 void resetTimer4Setting()
 {
+    timer4SettingCount = osKernelSysTick();
 }
 int readTime4Setting_ms()
 {
+    return osKernelSysTick() - timer4SettingCount;
 }
 
+static int timer4PeriodCount = 0;
 void resetTimer4Period()
 {
+    timer4PeriodCount = osKernelSysTick();
 }
 int readTime4Period_ms()
 {
+    return osKernelSysTick() - timer4PeriodCount;
 }
 GPIO_PinState stateConvertFromCage(DigitalPinState_t status)
 {
