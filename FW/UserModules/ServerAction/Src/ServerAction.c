@@ -105,7 +105,6 @@ void netifLinkCallback(struct netif* netIf)
         lwip_close(serverSocketFd);
 
         osThreadTerminate(serverThreadId);
-
     }
 }
 
