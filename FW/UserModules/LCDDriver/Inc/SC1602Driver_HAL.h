@@ -1,7 +1,6 @@
 #ifndef _SC1602DRIVER_HAL_H_
 #define _SC1602DRIVER_HAL_H_
 
-
 #include "SC1602Typedef.h"
 
 //To be defined by user
