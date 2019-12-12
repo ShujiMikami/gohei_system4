@@ -46,7 +46,6 @@ static void setSocketNonBlocking(SocketFileDiscriptor_t socketFd);
 static int readAllBytesFromClient(SocketFileDiscriptor_t clientFd, char* buffer, int bufferSize);
 
 
-#define SERVER_TASK_NAME serverActionTask;
 
 static osThreadId serverThreadId;
 
@@ -96,8 +95,8 @@ void netifLinkCallback(struct netif* netIf)
 
     if(isLinkUp){//切断状態から接続状態に遷移した場合は, サーバータスクをスタート
         isThreadRebootRequired = true;
-        osThreadDef(SERVER_TASK_NAME, ServerThreadFunc, osPriorityNormal, 0, 1024);
-        serverThreadId = osThreadCreate(osThread(SERVER_TASK_NAME), NULL);
+        osThreadDef(serverActionTask, ServerThreadFunc, osPriorityNormal, 0, 1024);
+        serverThreadId = osThreadCreate(osThread(serverActionTask), NULL);
         
     }else{//接続状態から切断状態に遷移した場合は, サーバータスクを終了
         isThreadTerminateRequired = true;
