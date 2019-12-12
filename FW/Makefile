@@ -22,7 +22,7 @@ TARGET = gohei_system4_FW
 # debug build?
 DEBUG = 1
 # optimization
-OPT = -Og
+OPT = -O0
 
 
 #######################################

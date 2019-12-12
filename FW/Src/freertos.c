@@ -58,6 +58,7 @@
 /* USER CODE BEGIN Includes */     
 #include <stdbool.h>
 #include "ServerAction.h"
+#include "CageDriver.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -125,6 +126,9 @@ void MX_FREERTOS_Init(void) {
   osThreadDef(SERVER_TASK_NAME, ServerThreadFunc, osPriorityNormal, 0, 1024);
   osThreadId serverThreadId = osThreadCreate(osThread(SERVER_TASK_NAME), NULL);
   SetServerThreadID(serverThreadId);
+
+  osThreadDef(cageTask, CageDriveThread, osPriorityNormal, 0, 256);
+  osThreadCreate(osThread(cageTask), NULL);
   /* USER CODE END RTOS_THREADS */
 
   /* USER CODE BEGIN RTOS_QUEUES */
