@@ -25,7 +25,7 @@
 #define CONTROL_STATUS_OFF (DigitalPinState_t)DIGITAL_PIN_LOW
 
 //バージョン番号
-const char versionNumber[] = "Ver 0.0.2";
+const static char versionNumber[] = "Ver 0.0.2";
 
 //システムステータス
 typedef enum{
@@ -41,38 +41,38 @@ typedef enum{
 }OperatingStatus_t;
 
 //サーミスタ周り
-double calculateThermistorResistance(double adcRatio);
+static double calculateThermistorResistance(double adcRatio);
 #define R_ROOM (double)10000.0
 #define B_CONST (double)3380.0
 #define R_SERIES (double)10000.0
-double measureTemperature();
+static double measureTemperature();
 
 //operatingAction
-double targetTemperature = 25.0;
-double targetTemperatureLowerLimit = 20;
-double targetTemperatureUpperLimit = 35;
-double dangerZone = 40.0;
-double deadZone = 1.0;
-void operatingAction();
+static double targetTemperature = 25.0;
+static double targetTemperatureLowerLimit = 20;
+static double targetTemperatureUpperLimit = 35;
+static double dangerZone = 40.0;
+static double deadZone = 1.0;
+static void operatingAction();
 #define OPERATING_PERIOD (int)3000 //3秒周期制御
 
 //settingAction
-void settingAction();
+static void settingAction();
 #define BUTTON_DISABLE_TIME (int)300//300msecはボタン無効時間
-void indicateSetTemperature();
+static void indicateSetTemperature();
 
 //action
-void systemAction(SystemStatus_t systemStatus);
+static void systemAction(SystemStatus_t systemStatus);
 
 //Current Status Indicate
-void indicateCurrentStatus(double currentTemperature, char* controlStatus);
+static void indicateCurrentStatus(double currentTemperature, char* controlStatus);
 
 //起動メッセージ系
-char initialString[] = "System Start";
-void indicateInitialMessage();
+const static char initialString[] = "System Start";
+static void indicateInitialMessage();
 
 //状態判定系
-SystemStatus_t getRequiredSystemStatus();
+static SystemStatus_t getRequiredSystemStatus();
 
 
 //外部から覗ける変数
