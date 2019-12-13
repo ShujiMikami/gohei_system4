@@ -125,7 +125,7 @@ void MX_FREERTOS_Init(void) {
   osThreadId serverThreadId = osThreadCreate(osThread(serverActionTask), NULL);
   SetServerThreadID(serverThreadId);
 
-  osThreadDef(cageTask, CageDriveThread, osPriorityNormal, 0, 256);
+  osThreadDef(cageTask, CageDriveThread, osPriorityNormal, 0, 512);
   osThreadCreate(osThread(cageTask), NULL);
   /* USER CODE END RTOS_THREADS */
 

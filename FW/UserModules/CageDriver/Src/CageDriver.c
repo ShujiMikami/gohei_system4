@@ -204,6 +204,7 @@ void systemAction(SystemStatus_t systemStatus)
         }
 
         if(readTime4Period_ms() > OPERATING_PERIOD){
+            resetTimer4Period();
             operatingAction();
         }
     }else{
