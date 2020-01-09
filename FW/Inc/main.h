@@ -10,7 +10,7 @@
   * inserted by the user or by software development tools
   * are owned by their respective copyright owners.
   *
-  * Copyright (c) 2019 STMicroelectronics International N.V. 
+  * Copyright (c) 2020 STMicroelectronics International N.V. 
   * All rights reserved.
   *
   * Redistribution and use in source and binary forms, with or without 
@@ -64,20 +64,12 @@
 #define SETTING_BUTTON_UP_GPIO_Port GPIOE
 #define SETTING_BUTTON_DOWN_Pin GPIO_PIN_3
 #define SETTING_BUTTON_DOWN_GPIO_Port GPIOE
-#define LCD_DATA6_Pin GPIO_PIN_5
-#define LCD_DATA6_GPIO_Port GPIOE
-#define LCD_DATA7_Pin GPIO_PIN_6
-#define LCD_DATA7_GPIO_Port GPIOE
 #define LCD_RS_Pin GPIO_PIN_13
 #define LCD_RS_GPIO_Port GPIOC
 #define LCD_DATA1_Pin GPIO_PIN_0
 #define LCD_DATA1_GPIO_Port GPIOC
 #define LCD_DATA0_Pin GPIO_PIN_6
 #define LCD_DATA0_GPIO_Port GPIOA
-#define LCD_RW_Pin GPIO_PIN_7
-#define LCD_RW_GPIO_Port GPIOE
-#define LCD_E_Pin GPIO_PIN_8
-#define LCD_E_GPIO_Port GPIOE
 #define LCD_DATA5_Pin GPIO_PIN_9
 #define LCD_DATA5_GPIO_Port GPIOE
 #define LCD_DATA4_Pin GPIO_PIN_10
@@ -88,6 +80,14 @@
 #define LCD_DATA2_GPIO_Port GPIOE
 #define SETTING_ENTRY_SW_Pin GPIO_PIN_13
 #define SETTING_ENTRY_SW_GPIO_Port GPIOE
+#define LCD_E_Pin GPIO_PIN_6
+#define LCD_E_GPIO_Port GPIOC
+#define LCD_RW_Pin GPIO_PIN_7
+#define LCD_RW_GPIO_Port GPIOC
+#define LCD_DATA7_Pin GPIO_PIN_11
+#define LCD_DATA7_GPIO_Port GPIOC
+#define LCD_DATA6_Pin GPIO_PIN_12
+#define LCD_DATA6_GPIO_Port GPIOC
 #define UV_CONTROL_Pin GPIO_PIN_8
 #define UV_CONTROL_GPIO_Port GPIOB
 #define HEATER_CONTROL_Pin GPIO_PIN_9

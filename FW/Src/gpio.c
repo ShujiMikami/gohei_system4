@@ -10,7 +10,7 @@
   * inserted by the user or by software development tools
   * are owned by their respective copyright owners.
   *
-  * Copyright (c) 2019 STMicroelectronics International N.V. 
+  * Copyright (c) 2020 STMicroelectronics International N.V. 
   * All rights reserved.
   *
   * Redistribution and use in source and binary forms, with or without 
@@ -80,15 +80,15 @@ void MX_GPIO_Init(void)
   __HAL_RCC_GPIOD_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOE, LCD_DATA6_Pin|LCD_DATA7_Pin|LCD_RW_Pin|LCD_E_Pin 
-                          |LCD_DATA5_Pin|LCD_DATA4_Pin|LCD_DATA3_Pin|LCD_DATA2_Pin 
-                          |FAN_CONTROL_Pin, GPIO_PIN_RESET);
-
-  /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOC, LCD_RS_Pin|LCD_DATA1_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOC, LCD_RS_Pin|LCD_DATA1_Pin|LCD_E_Pin|LCD_RW_Pin 
+                          |LCD_DATA7_Pin|LCD_DATA6_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(LCD_DATA0_GPIO_Port, LCD_DATA0_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOE, LCD_DATA5_Pin|LCD_DATA4_Pin|LCD_DATA3_Pin|LCD_DATA2_Pin 
+                          |FAN_CONTROL_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, UV_CONTROL_Pin|HEATER_CONTROL_Pin, GPIO_PIN_RESET);
@@ -99,19 +99,10 @@ void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : PEPin PEPin PEPin PEPin 
-                           PEPin PEPin PEPin PEPin 
-                           PEPin */
-  GPIO_InitStruct.Pin = LCD_DATA6_Pin|LCD_DATA7_Pin|LCD_RW_Pin|LCD_E_Pin 
-                          |LCD_DATA5_Pin|LCD_DATA4_Pin|LCD_DATA3_Pin|LCD_DATA2_Pin 
-                          |FAN_CONTROL_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
-
-  /*Configure GPIO pins : PCPin PCPin */
-  GPIO_InitStruct.Pin = LCD_RS_Pin|LCD_DATA1_Pin;
+  /*Configure GPIO pins : PCPin PCPin PCPin PCPin 
+                           PCPin PCPin */
+  GPIO_InitStruct.Pin = LCD_RS_Pin|LCD_DATA1_Pin|LCD_E_Pin|LCD_RW_Pin 
+                          |LCD_DATA7_Pin|LCD_DATA6_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -123,6 +114,15 @@ void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(LCD_DATA0_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : PEPin PEPin PEPin PEPin 
+                           PEPin */
+  GPIO_InitStruct.Pin = LCD_DATA5_Pin|LCD_DATA4_Pin|LCD_DATA3_Pin|LCD_DATA2_Pin 
+                          |FAN_CONTROL_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
 
   /*Configure GPIO pins : PBPin PBPin */
   GPIO_InitStruct.Pin = UV_CONTROL_Pin|HEATER_CONTROL_Pin;

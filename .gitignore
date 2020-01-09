@@ -2,3 +2,4 @@ FW/build/
 *.swp
 *.un~
 *.plantuml~
+FW/.clangd/
