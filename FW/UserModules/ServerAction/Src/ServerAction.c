@@ -11,6 +11,7 @@
 
 #define HTTP_PORT   80
 
+
 volatile bool isThreadTerminateRequired = false;
 volatile bool isThreadRebootRequired = false;
 
@@ -160,6 +161,8 @@ void ServerThreadFunc()
 
         //close connection
         close(clientfd);
+    }
+    while(1){
     }
 }
 void requestAction(char* requestMessage, SocketFileDiscriptor_t clientFd)
